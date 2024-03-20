@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.datatables.net/2.0.2/js/dataTables.js"></script>
+  <link href="{{ url_for('static', path='/style.css') }}" rel="stylesheet">
+  <script src="{{ url_for('static', path='/main.js') }}"></script>
+</head>
+<body>
+  <div class="wave"></div>
+  <div class="wave"></div>
+  <div class="wave"></div>
+
+  <div class="search-box">
+    <div class="input-box">
+      <input id="search-input" type="search" tabindex="1" spellcheck="false" placeholder="Search..." onkeyup="if(window.event.keyCode==13){searchArticles()}"/>
+    </div> 
+    <button id="btn-search" onclick='searchArticles()'>
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+    <div>
+    </div>
+  </div>
+</body>
+</html>
