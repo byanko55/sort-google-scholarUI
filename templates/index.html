@@ -18,11 +18,14 @@
   <div class="search-box">
     <div class="input-box">
       <input id="search-input" type="search" tabindex="1" spellcheck="false" placeholder="Search..." onkeyup="if(window.event.keyCode==13){searchArticles()}"/>
-    </div> 
-    <button id="btn-search" onclick='searchArticles()'>
-      <i class="fa-solid fa-magnifying-glass"></i>
-    </button>
-    <div>
+      <button id="btn-search" onclick='searchArticles()'>
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+    </div>
+    <div class="yearpicker">
+      <input type="text" id="start-yearpicker" placeholder="Start year" value="">
+      <i class="fa-solid fa-right-long"></i>
+      <input type="text" id="end-yearpicker" placeholder="End year" value="">
     </div>
   </div>
 </body>

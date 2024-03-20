@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
+import datetime
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -11,7 +12,7 @@ GSCHOLAR_URL = 'https://scholar.google.com/scholar?start={}&num=20&q={}&hl=en&as
 STARTYEAR_URL = '&as_ylo={}'
 ENDYEAR_URL = '&as_yhi={}'
 ROBOT_KW=['unusual traffic from your computer network', 'not a robot']
-MAX_PAPER = 100
+MAX_PAPER = 20
 
 app = FastAPI()
 
@@ -23,8 +24,11 @@ async def index(request:Request):
     return templates.TemplateResponse("index.html", {"request":request, "msg":"Go"})
 
 @app.get('/search')
-def search(keyword:str):
+def search(keyword:str, start:str, end:str):
     session = requests.Session()
+    
+    start = 1900 if start == "" else int(start)
+    end = datetime.date.today().year if end == "" else int(end)
     
     links = []
     title = []
@@ -41,6 +45,9 @@ def search(keyword:str):
     
     for n in range(0, MAX_PAPER, 20):
         url = GSCHOLAR_URL.format(str(n), keyword.replace(' ', '+'))
+        url = url + STARTYEAR_URL.format(start)
+        url = url + ENDYEAR_URL.format(end)
+        
         page = session.get(url, proxies=proxies, verify=False)
         c = page.content
         
