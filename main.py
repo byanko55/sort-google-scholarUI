@@ -60,14 +60,12 @@ def search(keyword:str, start:str, end:str):
         
         for div in mydivs:
             try:
-                links.append(div.find('h3').find('a').get('href'))
+                _l = div.find('h3').find('a').get('href')
+                _t = div.find('h3').find('a').text
+                links.append(_l)
+                title.append(_t)
             except: # catch *all* exceptions
-                links.append('Look manually at: '+url)
-
-            try:
-                title.append(div.find('h3').find('a').text)
-            except:
-                title.append('Could not catch title')
+                continue
 
             try:
                 citations.append(get_citations(str(div.format_string)))
@@ -82,7 +80,7 @@ def search(keyword:str, start:str, end:str):
             try:
                 author.append(get_author(div.find('div',{'class' : 'gs_a'}).text))
             except:
-                author.append("Author not found")
+                title.append('Authors not found')
 
             try:
                 publisher.append(get_publisher(div.find('div',{'class' : 'gs_a'}).text))
@@ -140,7 +138,13 @@ def get_author(content):
     o_ = []
 
     for name in authors:
-        first_name, last_name = map(str, name.split(' '))
+        full_name = list(map(str, name.split(' ')))
+
+        if len(full_name) == 1:
+            o_.append(full_name[0])
+            continue
+
+        first_name, last_name = full_name[0], full_name[-1]
         first_name = '. '.join(i for i in first_name)
         full_name = first_name + ". " + last_name
         o_.append(full_name)
@@ -150,7 +154,10 @@ def get_author(content):
     return out
 
 def get_publisher(content):
-    out = content.split("- ")[1]
-    out = out.split(',')[0]
+    infos = content.split("- ")
+    out = infos[1].split(',')
+
+    if len(out) == 2 and '…' not in out[0]:
+        return out[0]
     
-    return out
+    return infos[2]
