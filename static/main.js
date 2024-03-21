@@ -63,9 +63,9 @@ function displayArticles(articles){
         order: [[5, 'desc']],
         columns: [
             { width: '5%' },
-            { width: '45%' },
+            { width: '40%' },
             { width: '20%' },
-            { width: '15%' },
+            { width: '20%' },
             { width: '5%' },
             { width: '10%' }
         ]
