@@ -8,13 +8,28 @@ function searchArticles(){
     let end_year = document.getElementById('end-yearpicker').value;
     let url = '/search?keyword=' + keyword + "&start=" + start_year + "&end=" + end_year;
 
+    const warning_box = document.querySelector(".warning-box");
+    const loading_box = document.querySelector(".loading-box");
+
     $.getJSON('/search', {keyword:keyword, start:start_year, end:end_year}, function (data) {
         console.log("searchArticles: send request to " + url);
         articles = data;
+        
+        loading_box.style.display = "block";
+        warning_box.style.display = "none";
     })
-    .done(function() { 
-        console.log("searchArticles: found " + articles.length + " articles!");
-        displayArticles(articles);
+    .done(function() {
+        loading_box.style.display = "none";
+
+        if (articles.substring(0, 9) == '<!DOCTYPE') {
+            warning_box.style.display = "block";
+            var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top="+(screen.height-400)+",left="+(screen.width-840));
+            win.document.body.innerHTML = articles;
+        }
+        else {
+            console.log("searchArticles: found " + articles.length + " articles!");
+            displayArticles(articles);
+        }
     })
     .fail(function(jqXHR, textStatus, errorThrown) { console.log('searchArticles: getJSON request failed! ' + textStatus); })
     .always(function() { console.log('searchArticles: getJSON request ended!'); });

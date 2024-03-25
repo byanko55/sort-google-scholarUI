@@ -210,6 +210,30 @@ body {
   }
 }
 
+.warning-box,
+.loading-box {
+  text-align: center;
+  display: none;
+  margin-top: 6rem;
+}
+
+.warning-box {
+  font-size: 24px;
+  color: indianred;
+}
+
+.loading-box {
+  img {
+    width: 128px;
+    aspect-ratio: 1.0;
+  }
+
+  p {
+    font-size: 20px;
+    margin: 0;
+  }
+}
+
 #articles_wrapper {
   position: relative;
   width: 80%;
