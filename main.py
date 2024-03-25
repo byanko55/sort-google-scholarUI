@@ -8,11 +8,12 @@ import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 
-GSCHOLAR_URL = 'https://scholar.google.com/scholar?start={}&num=20&q={}&hl=en&as_sdt=0,5'
+GSCHOLAR_URL = 'https://scholar.google.com/scholar?start={}&q={}&hl=en&as_sdt=0,5'
 STARTYEAR_URL = '&as_ylo={}'
 ENDYEAR_URL = '&as_yhi={}'
 ROBOT_KW=['unusual traffic from your computer network', 'not a robot']
-MAX_PAPER = 20
+MAX_PAPER = 50
+PROGRESS = 0
 
 app = FastAPI()
 
@@ -23,13 +24,14 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def index(request:Request):
     return templates.TemplateResponse("index.html", {"request":request, "msg":"Go"})
 
-@app.get('/captcha', response_class=HTMLResponse)
-async def captcha(page_content:str):
-    print(page_content)
-    return HTMLResponse(content=page_content, status_code=200)
+@app.get('/captcha')
+def captcha():
+    res = {'val': PROGRESS}
+    return res
 
 @app.get('/search')
 def search(keyword:str, start:str, end:str):
+    global PROGRESS
     session = requests.Session()
     
     start = 1900 if start == "" else int(start)
@@ -43,7 +45,8 @@ def search(keyword:str, start:str, end:str):
     publisher = []
     rank = [0]
     
-    for n in range(0, MAX_PAPER, 20):
+    for n in range(0, MAX_PAPER, 10):
+        PROGRESS = n
         url = GSCHOLAR_URL.format(str(n), keyword.replace(' ', '+'))
         url = url + STARTYEAR_URL.format(start)
         url = url + ENDYEAR_URL.format(end)
@@ -53,7 +56,7 @@ def search(keyword:str, start:str, end:str):
         
         if any(kw in c.decode('ISO-8859-1') for kw in ROBOT_KW):
             print("Robot checking detected, handling with selenium (if installed)")
-            return c
+            return {'url':url, 'content':c, 'error':True }
         
         soup = BeautifulSoup(c, 'html.parser', from_encoding='utf-8')
         

@@ -8,26 +8,63 @@ function searchArticles(){
     let end_year = document.getElementById('end-yearpicker').value;
     let url = '/search?keyword=' + keyword + "&start=" + start_year + "&end=" + end_year;
 
-    const warning_box = document.querySelector(".warning-box");
+    if (table != null){
+        console.log("searchArticles: reinitialize DataTable");
+        table.destroy();
+        table.clear();
+
+        let dtable = document.getElementById('articles');
+        dtable.remove();
+    }
+
+    const recaptcha_box = document.querySelector(".recaptcha-box");
     const loading_box = document.querySelector(".loading-box");
+
+    loading_box.style.display = "block";
+    recaptcha_box.style.display = "none";
+
+    window.setInterval(check_progress, 500);
 
     $.getJSON('/search', {keyword:keyword, start:start_year, end:end_year}, function (data) {
         console.log("searchArticles: send request to " + url);
         articles = data;
-        
-        loading_box.style.display = "block";
-        warning_box.style.display = "none";
     })
     .done(function() {
         loading_box.style.display = "none";
 
-        if (articles.substring(0, 9) == '<!DOCTYPE') {
-            warning_box.style.display = "block";
-            var win = window.open("", "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top="+(screen.height-400)+",left="+(screen.width-840));
-            win.document.body.innerHTML = articles;
+        if (Object.hasOwn(articles, 'error')) {
+            recaptcha_box.style.display = "block";
+
+            //var win = window.open(articles.url, "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top="+(screen.height-400)+",left="+(screen.width-840));
+            var win = window.open(articles.url, "_blank");
+            win.document.body.innerHTML = articles.content;
+
+            const parser = new DOMParser();
+            var el = parser.parseFromString(articles.content, 'text/html');
+
+            const captcha_ccl = el.getElementById('gs_captcha_ccl');
+            const captcha_script = captcha_ccl.querySelector('script');
+            const captcha_content = captcha_ccl.querySelector('#gs_captcha_c');
+
+            //recaptcha_box.append(captcha_content);
+            //document.body.appendChild(captcha_script);
+
+            //win.document.body.appendChild(captcha_script);
+
+
+            /*
+            const captcha = el.getElementById('recaptcha');
+            captcha.setAttribute('data-sitekey', '6LdYsqMpAAAAAFje1Aj3Z8O3WOoNlW4ss4TB5shs');
+            recaptcha_box.append(captcha);
+
+            s = document.createElement('script');
+            s.src = "https://www.google.com/recaptcha/api.js";
+            document.body.appendChild( s );
+            */
         }
         else {
             console.log("searchArticles: found " + articles.length + " articles!");
+            console.log(articles);
             displayArticles(articles);
         }
     })
@@ -36,15 +73,6 @@ function searchArticles(){
 }
 
 function displayArticles(articles){
-    if (table != null){
-        console.log("displayArticles: reinitialize DataTable");
-        table.destroy();
-        table.clear();
-
-        let dtable = document.getElementById('articles');
-        dtable.remove();
-    }
-
     let records = document.createElement("table");
 
     records.innerHTML = '<table><thead><tr>' +
@@ -75,16 +103,34 @@ function displayArticles(articles){
         searching: false,
         responsive: true,
         ordering: true,
-        order: [[5, 'desc']],
-        columns: [
-            { width: '5%' },
-            { width: '40%' },
-            { width: '20%' },
-            { width: '20%' },
-            { width: '5%' },
-            { width: '10%' }
-        ]
+        order: [[5, 'desc']]
     });
+
+    const colgroup = document.getElementById('articles').querySelectorAll('col');
+
+    colgroup[0].style.width = "5%";
+    colgroup[1].style.width = "40%";
+    colgroup[2].style.width = "20%";
+    colgroup[3].style.width = "20%";
+    colgroup[4].style.width = "5%";
+    colgroup[5].style.width = "10%";
+}
+
+function check_progress(){
+    const loading_box = document.querySelector(".loading-box");
+
+    if (loading_box.style.display == 'none') return;
+    
+    var progress;
+
+    $.getJSON('/captcha', function (data) {
+        progress = data;
+    })
+    .done(function() {
+        const progress_meter = document.querySelector('.loading-progress');
+        progress_meter.innerHTML = progress.val + "%";
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) { console.log('check_progress: getJSON request failed! ' + textStatus); });
 }
 
 const version = "1.1.0";

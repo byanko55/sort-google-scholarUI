@@ -210,16 +210,20 @@ body {
   }
 }
 
-.warning-box,
+.recaptcha-box,
 .loading-box {
   text-align: center;
   display: none;
   margin-top: 6rem;
 }
 
-.warning-box {
+.recaptcha-box {
   font-size: 24px;
   color: indianred;
+}
+
+#recaptcha div {
+  margin: auto;
 }
 
 .loading-box {
@@ -311,6 +315,11 @@ table.dataTable{
   display: block;
   overflow-y: scroll;
   max-height: 512px;
+  table-layout: fixed;
+
+  colgroup {
+    width: 1536px;
+  }
 
   th, td { 
     padding: 10px; 
