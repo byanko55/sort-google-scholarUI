@@ -9,14 +9,22 @@ import pandas as pd
 from time import sleep
 from bs4 import BeautifulSoup
 
-GSCHOLAR_URL = 'https://scholar.google.com/scholar?start={}&q={}&hl=en&as_sdt=0,5'
-STARTYEAR_URL = '&as_ylo={}'
-ENDYEAR_URL = '&as_yhi={}'
+app = FastAPI()
+
+GSCHOLAR_URL = 'https://scholar.google.com/scholar?start={}&q={}&hl=en&as_sdt=0,5&as_ylo={}&as_yhi={}'
 ROBOT_KW=['unusual traffic from your computer network', 'not a robot']
 MAX_PAPER = 100
 PROGRESS = 0
+PROXY = None
 
-app = FastAPI()
+""" 
+    Erase the `#` in below code block, 
+    if you want to send crawling requests via a proxy server.
+"""
+# PROXY = {
+#     'http': 'http://PROXYIP:PROXYPORT',
+#     'https': 'http://PROXYIP:PROXYPORT'
+# }
 
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -48,15 +56,17 @@ def search(keyword:str, start:str, end:str):
     
     for n in range(0, MAX_PAPER, 10):
         PROGRESS = n
-        url = GSCHOLAR_URL.format(str(n), keyword.replace(' ', '+'))
-        url = url + STARTYEAR_URL.format(start)
-        url = url + ENDYEAR_URL.format(end)
+        url = GSCHOLAR_URL.format(str(n), keyword.replace(' ', '+'), start, end)
         
-        page = session.get(url, verify=False)
+        if PROXY != None:
+            page = session.get(url, proxies=PROXY, verify=False)
+        else :
+            page = session.get(url, verify=False)
+
         c = page.content
         
         if any(kw in c.decode('ISO-8859-1') for kw in ROBOT_KW):
-            print("Robot checking detected, handling with selenium (if installed)")
+            print("Robot checking detected")
             return {'url':url, 'content':c, 'error':True }
         
         soup = BeautifulSoup(c, 'html.parser', from_encoding='utf-8')
