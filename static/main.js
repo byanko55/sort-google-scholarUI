@@ -34,33 +34,6 @@ function searchArticles(){
 
         if (Object.hasOwn(articles, 'error')) {
             recaptcha_box.style.display = "block";
-
-            //var win = window.open(articles.url, "Title", "toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top="+(screen.height-400)+",left="+(screen.width-840));
-            var win = window.open(articles.url, "_blank");
-            win.document.body.innerHTML = articles.content;
-
-            const parser = new DOMParser();
-            var el = parser.parseFromString(articles.content, 'text/html');
-
-            const captcha_ccl = el.getElementById('gs_captcha_ccl');
-            const captcha_script = captcha_ccl.querySelector('script');
-            const captcha_content = captcha_ccl.querySelector('#gs_captcha_c');
-
-            //recaptcha_box.append(captcha_content);
-            //document.body.appendChild(captcha_script);
-
-            //win.document.body.appendChild(captcha_script);
-
-
-            /*
-            const captcha = el.getElementById('recaptcha');
-            captcha.setAttribute('data-sitekey', '6LdYsqMpAAAAAFje1Aj3Z8O3WOoNlW4ss4TB5shs');
-            recaptcha_box.append(captcha);
-
-            s = document.createElement('script');
-            s.src = "https://www.google.com/recaptcha/api.js";
-            document.body.appendChild( s );
-            */
         }
         else {
             console.log("searchArticles: found " + articles.length + " articles!");

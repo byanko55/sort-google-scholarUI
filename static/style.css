@@ -218,8 +218,34 @@ body {
 }
 
 .recaptcha-box {
-  font-size: 24px;
-  color: indianred;
+  color: #29293D;
+
+  h1 { font-size: 4rem; }
+  
+  .warning-1 {
+    font-weight: 600;
+    font-size: 2rem;
+    font-family: cursive;
+    background: gold;
+    padding: 8px;
+    color: crimson;
+  }
+
+  .warning-2 {
+    font-size: 20px;
+    line-height: 200%;
+    width: 50rem;
+    margin: auto;
+    text-align: left;
+
+    strong, a { color: cornflowerblue; }
+    a { text-decoration: none; }
+    u {
+      text-decoration: none;
+      font-size: 18px;
+      color: #505080;
+    }
+  }
 }
 
 #recaptcha div {
