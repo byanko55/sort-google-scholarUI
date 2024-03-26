@@ -6,13 +6,14 @@ from fastapi.templating import Jinja2Templates
 import datetime
 import requests
 import pandas as pd
+from time import sleep
 from bs4 import BeautifulSoup
 
 GSCHOLAR_URL = 'https://scholar.google.com/scholar?start={}&q={}&hl=en&as_sdt=0,5'
 STARTYEAR_URL = '&as_ylo={}'
 ENDYEAR_URL = '&as_yhi={}'
 ROBOT_KW=['unusual traffic from your computer network', 'not a robot']
-MAX_PAPER = 50
+MAX_PAPER = 100
 PROGRESS = 0
 
 app = FastAPI()
@@ -92,6 +93,9 @@ def search(keyword:str, start:str, end:str):
                 publisher.append("Publisher not found")
 
             rank.append(rank[-1]+1)
+
+        # Delay (Without delay, you may highly encounter the Robot checking)
+        sleep(0.5)
             
     data = pd.DataFrame(list(zip(author, title, citations, year, publisher, links)), index = rank[1:],
                         columns=['Author', 'Title', 'Citations', 'Year', 'Publisher', 'Source'])
