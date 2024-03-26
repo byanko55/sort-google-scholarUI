@@ -83,8 +83,8 @@ function displayArticles(articles){
     colgroup[0].style.width = "5%";
     colgroup[1].style.width = "40%";
     colgroup[2].style.width = "20%";
-    colgroup[3].style.width = "20%";
-    colgroup[4].style.width = "5%";
+    colgroup[3].style.width = "17.5%";
+    colgroup[4].style.width = "7.5%";
     colgroup[5].style.width = "10%";
 }
 

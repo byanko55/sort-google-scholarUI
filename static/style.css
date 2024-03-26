@@ -266,7 +266,7 @@ body {
 
 #articles_wrapper {
   position: relative;
-  width: 80%;
+  width: 90%;
   min-width: 1000px;
   margin: 4rem auto;
   clear: both;
@@ -274,7 +274,7 @@ body {
 
   select {
     color: #4a5568;
-    font-size: 1rem;
+    font-size: 14px;
     padding: 6px 12px;
     line-height: 1.25;
     border-width: 2px;
@@ -289,6 +289,7 @@ body {
   clear: both;
   width: 100%;
   margin-top: 1rem;
+  font-size: 14px;
 
   .dt-info { color: darkcyan !important; }
 }
@@ -311,7 +312,7 @@ body {
       right: 8px;
       opacity: 0.25;
       line-height: 9px;
-      font-size: 0.8em;
+      font-size: 12px;
     }
 
     &:before{
@@ -340,7 +341,7 @@ table.dataTable{
   border-collapse: collapse;
   display: block;
   overflow-y: scroll;
-  max-height: 512px;
+  max-height: 384px;
   table-layout: fixed;
 
   colgroup {
@@ -372,16 +373,12 @@ table.dataTable{
     margin-left: 4px;
     color: #667eea !important;
   }
-  td i {
-    font-size: 1rem;
-  }
 
   thead { 
     background: #EFF3F9; 
     border-bottom: 1px solid dimgray;
   }
   tbody { 
-    font-size: 1.125rem;
     color: dimgray; 
   }
 
@@ -413,7 +410,6 @@ table.dataTable{
 
 .dt-paging {
   .dt-paging-button {
-    font-size: 1rem;
     width: 2rem;
     aspect-ratio: 1.0;
     padding: 0;
@@ -438,5 +434,18 @@ table.dataTable{
   .disabled {
     cursor: default;
     color: rgba(0, 0, 0, 0.5) !important;
+  }
+}
+
+@media (min-width: 1440px) {
+  #articles_wrapper { 
+    width: 80%; 
+
+    select { font-size: 16px; }
+  }
+
+  table.dataTable {
+    max-height: 512px;
+    font-size: 16px;
   }
 }
