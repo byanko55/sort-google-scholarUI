@@ -37,7 +37,6 @@ function searchArticles(){
         }
         else {
             console.log("searchArticles: found " + articles.length + " articles!");
-            console.log(articles);
             displayArticles(articles);
         }
     })
