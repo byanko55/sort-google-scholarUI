@@ -1,7 +1,7 @@
 # Sort Google Scholar by Citations (Web-UI version)
 [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)]()
 
-![Demo image](https://i.ibb.co/Y06mZwc/2024-03-26-162901.png)
+![Demo image](https://i.ibb.co/8mZJMT5/2024-03-26-162901.webp)
 
 **@sort-google-scholarUI** is a web application that helps you search the *most-cited academic papers* published in a certain range of years.
 
